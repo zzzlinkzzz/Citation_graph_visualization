@@ -4,7 +4,7 @@ from network import draw_network
 from utils import load_option, search_text, dump_option
 
 st.set_page_config(
-     page_title="Ex-stream-ly Cool App",
+     page_title="Citation Network",
      page_icon="🧊",
      layout="wide",
      initial_sidebar_state="expanded",
