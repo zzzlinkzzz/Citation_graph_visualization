@@ -1,3 +1,4 @@
 streamlit
 pyvis
 pymongo
+pymongo[srv]
