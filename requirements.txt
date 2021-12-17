@@ -5,3 +5,4 @@ pymongo[srv]
 sklearn
 autocorrect
 nltk
+tables
