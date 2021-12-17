@@ -2,9 +2,14 @@ from pyvis.network import Network
 import json
 from pymongo import MongoClient
 from numpy import log2
+import os
+
+db_user = os.environ.get('username')
+db_password = os.environ.get('mongo_cn_pass')
+
 
 client = MongoClient(
-    "mongodb+srv://TungLe:396369@cluster0.7tetj.mongodb.net/visualization?retryWrites=true&w=majority")
+    f"mongodb+srv://{db_user}:{db_password}@cluster0.7tetj.mongodb.net/visualization?retryWrites=true&w=majority")
 db = client.get_database('visualization')
 collection = db.get_collection('citation_network')
 
