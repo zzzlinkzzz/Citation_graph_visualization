@@ -17,6 +17,7 @@ titles = load_option('titles')
 id_list = load_option('id_list')
 multiwords = load_option('multiwords')
 tokenizer = MWETokenizer(multiwords,separator='_')
+temp = False
 # =============================================================================
 # side bar
 st.sidebar.title("Team members:")
@@ -44,12 +45,20 @@ temp_network = st.sidebar.button("Draw")
 st.header("Science paper network visualization")
 
 if temp_network:
+    temp = True
     # graph
     draw_network(chosen_id)
     HtmlFile = open('temp/temp.html', 'r',  encoding='utf-8')
     source_code = HtmlFile.read()
     components.html(source_code, height = 600, width = 1200)
+
+else:
+    # graph
+    HtmlFile = open('temp/base.html', 'r',  encoding='utf-8')
+    source_code = HtmlFile.read()
+    components.html(source_code, height = 600, width = 1200)
     
+if temp:
     # tf-idf
     sub_titles = load_option('temp_titles')
     feature_names = load_option('temp_feature_names')
@@ -71,7 +80,6 @@ if temp_network:
         fig = go.Figure(go.Bar(x=score[::-1],y=text[::-1],orientation='h'))
         fig.update_layout(title=choice,font=dict(size=18,color="#7f7f7f"))
         st.plotly_chart(fig, use_container_width=True)
-    
     
     # show paper table
     st.subheader('Paper info')
@@ -105,13 +113,8 @@ if temp_network:
           'props': [('color', '#97c2fc'),
                     ('font-size', '25px'),]}]
         ), width=1200)
-    
+
 else:
-    # graph
-    HtmlFile = open('temp/base.html', 'r',  encoding='utf-8')
-    source_code = HtmlFile.read()
-    components.html(source_code, height = 600, width = 1200)
-    
     # tf-idf
     sub_titles = load_option('base_titles')
     feature_names = load_option('base_feature_names')
