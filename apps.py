@@ -1,23 +1,30 @@
 import streamlit as st
 import streamlit.components.v1 as components
 from network import draw_network
+from nltk.tokenize import MWETokenizer
+import pandas as pd
 from utils import load_option, search_text, dump_option
-
+# =============================================================================
 st.set_page_config(
      page_title="Citation Network",
      page_icon="🧊",
      layout="wide",
-     initial_sidebar_state="expanded",
-)
+     initial_sidebar_state="expanded",)
+pd.set_option('max_colwidth', 1200)
 temp_network = False
-
 titles = load_option('titles')
 id_list = load_option('id_list')
-
-
+id_list = load_option('id_list')
+multiwords = load_option('multiwords')
+tokenizer = MWETokenizer(multiwords,separator='_')
+# =============================================================================
 # side bar
+st.sidebar.title("Team members:")
+st.sidebar.text("- Lê Thanh Tùng - 20007905")
+st.sidebar.text("- Vũ Hoàng Dũng - xxx")
+
 st.sidebar.title("Options:")
-keywords = st.sidebar.text_area('')
+keywords = st.sidebar.text_input('Keywords')
 search_button = st.sidebar.button("Search")
 
 if search_button:
@@ -31,21 +38,149 @@ except:
     result = []
 chosen_papers = st.sidebar.radio('Select titles', result)
 chosen_id = [id_list[index[result.index(chosen_papers)]]]
-
-
 temp_network = st.sidebar.button("Draw")
-
-
-st.header("Science paper network visualization")
+# =============================================================================
 # main page
+st.header("Science paper network visualization")
+
 if temp_network:
+    
     draw_network(chosen_id)
+    
     HtmlFile = open('temp/temp.html', 'r',  encoding='utf-8')
     source_code = HtmlFile.read()
     components.html(source_code, height = 600, width = 1200)
+    
+    st.subheader('Paper info')
+    df = pd.read_hdf('temp/temp1.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#349E54'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+    
+    st.subheader('References level 1')
+    df = pd.read_hdf('temp/temp2.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#DED007'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+    
+    st.subheader('References level 2')
+    df = pd.read_hdf('temp/temp3.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#FF3008'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+    
+    st.subheader('References level 3')
+    df = pd.read_hdf('temp/temp4.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#97c2fc'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+    
 else:
+    sub_titles = load_option('base_titles')
+    feature_names = load_option('base_feature_names')
+    denselist = load_option('base_denselist')
+    filted_titles = load_option('base_filted_titles')
+    
     HtmlFile = open('temp/base.html', 'r',  encoding='utf-8')
     source_code = HtmlFile.read()
     components.html(source_code, height = 600, width = 1200)
     
-st.text("Thành viên - Lê Thanh Tùng - 20007905 - Vu Hoang Dung - xxx")
+    st.subheader('Keywords score using TF-IDF')
+    col1, col2 = st.columns(2)
+    with col1:
+        choice = st.selectbox('Select title', sub_titles)
+        index = sub_titles.index(choice)
+        calculate = st.button('Calculate')
+    with col2:
+        st.text('bar chart')
+# =============================================================================
+#         if calculate:
+#             text = tokenizer.tokenize(filted_titles[index].split())
+#             indies = [feature_names.index(x) for x in text]
+#             score = [round(denselist[index][index],3) for index in indies]
+#             st.col2.text(','.join(text))
+#             st.col2.text(','.join(score))
+# =============================================================================
+    st.subheader('Paper info')
+    df = pd.read_hdf('temp/base1.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#349E54'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+    
+    st.subheader('References level 1')
+    df = pd.read_hdf('temp/base2.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#DED007'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+    
+    st.subheader('References level 2')
+    df = pd.read_hdf('temp/base3.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#FF3008'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+    
+    st.subheader('References level 3')
+    df = pd.read_hdf('temp/base4.h5',key='df')
+    st.dataframe(df.style.set_table_styles(
+        [{'selector': '',
+          'props': [('color', '#97c2fc'),
+                    ('font-size', '25px'),]}]
+        ), width=1200)
+
+# =============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
