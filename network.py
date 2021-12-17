@@ -30,43 +30,42 @@ def draw_network(id_list):
     df4 = pd.DataFrame(items4)[col]
     df4.to_hdf('temp/temp4.h5',key='df')
     
+    # tao base graph
+    g = Network(height = '550px', width = "100%", directed=True, bgcolor = "#222222", font_color="White")
+    
+    # them cac node vao graph
+    for node in items1:
+        g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = green, shape = "star", physics = False)
+    for node in items2:
+        g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = yelow, shape = "dot")
+    for node in items3:
+        g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = red, shape = "dot")
+    for node in items4:
+        g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = cyan, shape = "dot")
+    for node in items1:
+        g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = green, shape = "star", physics = False)
+    
+    # them cac edge vao graph
+    for node in items1:
+        for ref in node['references']:
+            g.add_edge(node['id'],ref,color = blue, width  = 10)
+    for node in items2:
+        for ref in node['references']:
+            g.add_edge(node['id'],ref,color = blue, width  = 10)
+    for node in items3:
+        for ref in node['references']:
+            g.add_edge(node['id'],ref,color = blue, width  = 10)
+    
+    # chon kieu visual
+    map_algs(g, alg="barnes")
+    
+    # save
+    g.save_graph('temp/temp.html')
+
     # titles for tf-idf
     query_titles = reduce(lambda a,b: pd.concat([a,b], axis=0),[df1,df2,df3,df4])['title'].values.tolist()
     dump_option(query_titles,'temp_titles')
     tfidf('temp_titles')
-# =============================================================================
-#     # tao base graph
-#     g = Network(height = '550px', width = "100%", directed=True, bgcolor = "#222222", font_color="White")
-#     
-#     # them cac node vao graph
-#     for node in items1:
-#         g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = green, shape = "star", physics = False)
-#     for node in items2:
-#         g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = yelow, shape = "dot")
-#     for node in items3:
-#         g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = red, shape = "dot")
-#     for node in items4:
-#         g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = cyan, shape = "dot")
-#     for node in items1:
-#         g.add_node(node['id'], label = node['title'] + '. Citation: ' + str(node['cited_num']), size = 30*log2(node['cited_num']), color = green, shape = "star", physics = False)
-#     
-#     # them cac edge vao graph
-#     for node in items1:
-#         for ref in node['references']:
-#             g.add_edge(node['id'],ref,color = blue, width  = 10)
-#     for node in items2:
-#         for ref in node['references']:
-#             g.add_edge(node['id'],ref,color = blue, width  = 10)
-#     for node in items3:
-#         for ref in node['references']:
-#             g.add_edge(node['id'],ref,color = blue, width  = 10)
-#     
-#     # chon kieu visual
-#     map_algs(g, alg="barnes")
-#     
-#     # save
-#     g.save_graph('temp/temp.html')
-# =============================================================================
 
 # =============================================================================
 if __name__ == '__main__':

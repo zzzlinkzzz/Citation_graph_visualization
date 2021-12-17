@@ -7,7 +7,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import re
 from nltk.tokenize import MWETokenizer
 from autocorrect import Speller
-
 # =============================================================================
 db_user = os.environ.get('username')
 db_password = os.environ.get('mongo_cn_pass')
@@ -75,6 +74,7 @@ def remove_symbols(text):
 # =============================================================================
 def tfidf(filename):
     titles = load_option(filename)
+    titles = list(map(remove_symbols,titles))
     filted_titles = []
     for title in titles:
         text = ' '.join([spell(word) for word in title.split(' ') if word not in stopwords])
@@ -83,7 +83,8 @@ def tfidf(filename):
     vectorizer = TfidfVectorizer()
     vector = vectorizer.fit_transform(titles)
     feature_names = vectorizer.get_feature_names()
-    denselist = vector.todense().tolist()
+    denselist = vector.todense()
+    denselist = denselist.tolist() #.reshape(denselist.shape[1],-1)
     dump_option(filted_titles, 'temp_filted_titles')
     dump_option(feature_names,'temp_feature_names')
     dump_option(denselist,'temp_denselist')
@@ -94,9 +95,16 @@ def tfidf(filename):
 
 # =============================================================================
 if __name__ == '__main__':
-    tfidf('temp_titles')
-    
-    
+    tfidf('base_titles')
+    sub_titles = load_option('base_titles')
+    feature_names = load_option('base_feature_names')
+    denselist = load_option('base_denselist')
+    filted_titles = load_option('base_filted_titles')
+    text = tokenizer.tokenize(filted_titles[0].split())
+    indies = [feature_names.index(x) for x in text]
+    score = [round(denselist[0][col_index],3) for col_index in indies]
+
+
     
     
     
