@@ -2,3 +2,6 @@ streamlit
 pyvis
 pymongo
 pymongo[srv]
+sklearn
+autocorrect
+nltk
