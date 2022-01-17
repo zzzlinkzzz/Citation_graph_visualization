@@ -20,10 +20,6 @@ tokenizer = MWETokenizer(multiwords,separator='_')
 temp = False
 # =============================================================================
 # side bar
-st.sidebar.title("Team members:")
-st.sidebar.text("- Lê Thanh Tùng - 20007905")
-st.sidebar.text("- Vũ Hoàng Dũng - 20007992")
-
 st.sidebar.title("Options:")
 keywords = st.sidebar.text_input('Keywords')
 search_button = st.sidebar.button("Search")
@@ -170,18 +166,3 @@ else:
                     ('font-size', '25px'),]}]
         ), width=1200)
 # =============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
